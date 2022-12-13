@@ -1,7 +1,8 @@
+const playerX = Player('X');
+const playerO = Player('O');
+
 const gameBoard = (function() {
     const board = ['X', 'O', 'X', 'O', 'X', 'O', 'X', 'O', 'X'];
-
-    let currentPlayer = 'O';
 
     function render() {
         for (let i = 0; i < 9; i++) {
@@ -10,23 +11,15 @@ const gameBoard = (function() {
         }
     }
 
-    function setPlayer(mark) {
-        currentPlayer = mark;
-    }
-
-    function handleClick(pos) {
+    function addMark(pos, mark) {
         if (board[pos]) {
             return;
         }
-        board[pos] = currentPlayer;
+        board[pos] = mark;
         render();
-        if (getGameResult()) {
-            game.endGame(getGameResult());
-        } else {
-            currentPlayer = currentPlayer == 'O' ? 'X' : 'O';
-        }
     }
 
+    // Checks the board for winner. Returns 'X' or 'O' or 'draw'. Returns false if the game is still not resolved.
     function getGameResult() {
         if (board[0]) {
             if (board[0] == board[1] && board[1] == board[2]) {
@@ -75,12 +68,18 @@ const gameBoard = (function() {
         render();
     }
 
-    return {setPlayer, handleClick, clear};
+    return {addMark, clear, getGameResult};
 })();
 
 const game = (function() {
+
+    let currentPlayer = playerO;
+    let gameEnded;
+
     function newGame() {
         gameBoard.clear();
+        currentPlayer = playerO;
+        gameEnded = false;
     }
 
     function endGame(result) {
@@ -90,15 +89,30 @@ const game = (function() {
         } else {
             display.textContent = `The winner is ${result}.`;
         }
+        gameEnded = true;
+    }
+
+    function handleClick(pos) {
+        if (gameEnded) {
+            return;
+        }
+        currentPlayer.play(pos);
+        let winner = gameBoard.getGameResult();
+        if (winner) {
+            endGame(winner);
+        } else {
+            currentPlayer = currentPlayer == playerO ? playerX : playerO;
+        }
+        
     }
 
     
-    return {newGame, endGame};
+    return {newGame, endGame, handleClick};
 })();
 
 function Player(mark) {
-    function play() {
-        gameBoard.setPlayer(mark);
+    function play(pos) {
+        gameBoard.addMark(pos, mark);
     }
     return {play};
 }
@@ -106,10 +120,7 @@ function Player(mark) {
 const squares = document.querySelectorAll('.square');
 
 for (let i = 0; i < 9; i++) {
-    squares[i].addEventListener('click', () => gameBoard.handleClick(i));
+    squares[i].addEventListener('click', () => game.handleClick(i));
 }
 
-gameBoard.clear();
-
-const playerX = Player('O');
-playerX.play();
+game.newGame();
