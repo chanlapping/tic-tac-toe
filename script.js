@@ -83,7 +83,7 @@ const game = (function() {
         gameBoard.clear();
         currentPlayer = playerO;
         gameOver = false;
-        display.textContent = '';
+        display.textContent = `${currentPlayer.getName()} to play.`;
     }
 
     function endGame(result) {
@@ -109,7 +109,12 @@ const game = (function() {
         if (winner) {
             endGame(winner);
         } else {
-            currentPlayer = currentPlayer == playerO ? playerX : playerO;
+            // currentPlayer = currentPlayer == playerO ? playerX : playerO;
+            // display.textContent = `${currentPlayer.getName()} to play.`;
+            let randomPos;
+            do {
+                randomPos = Math.floor(Math.random() * 9);
+            } while (!playerX.play(randomPos));
         }
         
     }
