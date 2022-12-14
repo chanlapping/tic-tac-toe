@@ -5,6 +5,7 @@ body {
     height: 100vh;
     justify-content: center;
     align-items: center;
+    font-family: Verdana, Geneva, sans-serif;
 }
 
 .container {
@@ -19,4 +20,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 30px;
+}
+
+.display {
+    height: 30px;
+}
+
+#newGameBtn, #xName, #oName {
+    font-family: inherit;
+    font-size: 100%;
+    padding: 8px;
+}
+
+label {
+    margin-right: 20px;
 }

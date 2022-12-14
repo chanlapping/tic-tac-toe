@@ -11,12 +11,14 @@ const gameBoard = (function() {
         }
     }
 
+    // Returns true if mark is successfully added. Returns false otherwise.
     function addMark(pos, mark) {
         if (board[pos]) {
-            return;
+            return false;
         }
         board[pos] = mark;
         render();
+        return true;
     }
 
     // Checks the board for winner. Returns 'X' or 'O' or 'draw'. Returns false if the game is still not resolved.
@@ -74,29 +76,35 @@ const gameBoard = (function() {
 const game = (function() {
 
     let currentPlayer = playerO;
-    let gameEnded;
+    let gameOver;
+    const display = document.querySelector('.display');
 
     function newGame() {
         gameBoard.clear();
         currentPlayer = playerO;
-        gameEnded = false;
+        gameOver = false;
+        display.textContent = '';
     }
 
     function endGame(result) {
-        const display = document.querySelector('.display');
         if (result == 'draw') {
             display.textContent = 'This game is a draw.';
+        } else if (result == 'X'){
+            display.textContent = `The winner is ${playerX.getName()}.`;
         } else {
-            display.textContent = `The winner is ${result}.`;
+            display.textContent = `The winner is ${playerO.getName()}`;
         }
-        gameEnded = true;
+        gameOver = true;
     }
 
     function handleClick(pos) {
-        if (gameEnded) {
+        if  (gameOver) {
             return;
         }
-        currentPlayer.play(pos);
+        let played = currentPlayer.play(pos);
+        if (!played) {
+            return;
+        }
         let winner = gameBoard.getGameResult();
         if (winner) {
             endGame(winner);
@@ -111,10 +119,21 @@ const game = (function() {
 })();
 
 function Player(mark) {
+    let name = 'Player ' + mark;
+
     function play(pos) {
-        gameBoard.addMark(pos, mark);
+        return gameBoard.addMark(pos, mark);
     }
-    return {play};
+
+    function setName(newName) {
+        name = newName;
+    }
+
+    function getName() {
+        return name;
+    }
+
+    return {play, setName, getName};
 }
 
 const squares = document.querySelectorAll('.square');
@@ -122,5 +141,18 @@ const squares = document.querySelectorAll('.square');
 for (let i = 0; i < 9; i++) {
     squares[i].addEventListener('click', () => game.handleClick(i));
 }
+
+const newGameBtn = document.querySelector('#newGameBtn');
+newGameBtn.addEventListener('click', game.newGame);
+
+const xName = document.querySelector('#xName');
+xName.addEventListener('change', function() {
+    playerX.setName(this.value);
+});
+
+const oName = document.querySelector('#oName');
+oName.addEventListener('change', function() {
+    playerO.setName(this.value);
+});
 
 game.newGame();
