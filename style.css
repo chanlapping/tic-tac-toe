@@ -1,3 +1,10 @@
+:root {
+    --blue-gray: #90ADC6;
+    --pewter: #E9EAEC;
+    --yellow: #FAD02C;
+    --dark-blue: #333652;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -6,31 +13,62 @@ body {
     justify-content: center;
     align-items: center;
     font-family: Verdana, Geneva, sans-serif;
+    background-color: var(--dark-blue);
+    color: var(--pewter);
+}
+
+h1 {
+    font-size: 3rem;
 }
 
 .container {
     display: grid;
     grid-template-columns: repeat(3, min-content);
+    gap: 2px;
+    background-color: var(--yellow);
 }
 
 .square {
-    border: 1px solid black;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 30px;
+    font-weight: bold;
+    color: var(--yellow);
+    background-color: var(--dark-blue);
 }
 
 .display {
-    height: 30px;
+    height: 50px;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 #newGameBtn, #xName, #oName {
     font-family: inherit;
     font-size: 100%;
     padding: 8px;
+    border: none;
+    border-radius: 4px;
+}
+
+#newGameBtn {
+    background-color: var(--yellow);
+    color: var(--dark-blue);
+    font-weight: bold;
+    width: 380px;
+    cursor: pointer;
+}
+
+.nameInput {
+    margin: 0;
+}
+
+#xName, #oName {
+    background-color: var(--blue-gray);
+    color: var(--dark-blue);
 }
 
 label {
